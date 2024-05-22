@@ -55,23 +55,16 @@ exports.createConsultation = (req, res) => {
 
 
 
-exports.getConsultation = (req, res) => {
-  const consultationId = req.params.id;
-  console.log("id",consultationId)
-  db("consultations")
-    .where("id", consultationId)
-    .first()
-    .then((consultation) => {
-      if (!consultation) {
-        return res.status(404).json({ error: "Consulta no encontrada" });
-      }
-      res.json(consultation);
-    })
-    .catch((error) => {
-      console.error("Error al obtener la consulta:", error);
-      res.status(500).json({ error: "Error al obtener la consulta" });
-    });
+exports.getConsultation = async (_req, res) => {
+  try {
+    const data = await db("consultations").select('*');
+    res.json(data);
+    console.log("Consultas traidas")
+  } catch (error) {
+    res.status(500).json({ error: 'Error al obtener las consultas' });
+  }
 };
+
 
 exports.updateConsultation = (req, res) => {
   const consultationId = req.params.id;
